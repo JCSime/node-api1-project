@@ -15,7 +15,7 @@ server.get('/api/server/users', (req, res)=>{
     })
     .catch(err => {
         res.status(500).json({ 
-            message: 'something bad happened',
+            message: "Couldn't get all users",
             error: err.message
         })
     })
@@ -32,5 +32,35 @@ server.get('/api/server/users', (req, res)=>{
 //         })
 //     }
 // })
+
+server.get('/api/server/users/:id', async (req, res) =>{
+    try {
+        const user = await User.findById(req.params.id)
+        res.json(user)
+    } catch (err) {
+        res.status(500).json({ 
+            message: "Couldn't get user by id",
+            error: err.message
+        })
+    }
+})
+
+server.post('/api/server/users', async (req, res)=> {
+    try {
+        if (!req.body || !req.body.bio) {
+            res.status(400).json({
+                message: 'name and bio are required!'
+            })
+        } else {
+            const newUser = await User.insert(req.body)
+            res.status(201).json(newUser)
+        }
+    } catch (err) {
+        res.status(500).json({ 
+            message: "Couldn't post new user",
+            error: err.message
+        })
+    }
+})
 
 module.exports = server; // EXPORT YOUR SERVER instead of {}
