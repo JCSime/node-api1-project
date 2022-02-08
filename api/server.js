@@ -8,7 +8,7 @@ server.get('/hello', (req, res)=>{
     res.json({ message: 'hello' })
 })
 
-server.get('/api/server/users', (req, res)=>{
+server.get('/api/users', (req, res)=>{
     User.find()
     .then(users => {
         res.json(users)
@@ -33,7 +33,7 @@ server.get('/api/server/users', (req, res)=>{
 //     }
 // })
 
-server.get('/api/server/users/:id', async (req, res) =>{
+server.get('/api/users/:id', async (req, res) =>{
     try {
         const user = await User.findById(req.params.id)
         res.json(user)
@@ -45,7 +45,7 @@ server.get('/api/server/users/:id', async (req, res) =>{
     }
 })
 
-server.post('/api/server/users', async (req, res)=> {
+server.post('/api/users', async (req, res)=> {
     try {
         if (!req.body || !req.body.bio) {
             res.status(400).json({
