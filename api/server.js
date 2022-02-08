@@ -36,7 +36,13 @@ server.get('/api/users', (req, res)=>{
 server.get('/api/users/:id', async (req, res) =>{
     try {
         const user = await User.findById(req.params.id)
-        res.json(user)
+        if (!user) {
+            res.status(404).json({
+                message: `User by id ${req.params.id} does not exist`
+            })
+        } else {
+            res.json(user)
+        }
     } catch (err) {
         res.status(500).json({ 
             message: "Couldn't get user by id",
@@ -58,6 +64,26 @@ server.post('/api/users', async (req, res)=> {
     } catch (err) {
         res.status(500).json({ 
             message: "Couldn't post new user",
+            error: err.message
+        })
+    }
+})
+
+server.put('/api/users/:id', async (req, res)=> {
+    const { id } = req.params 
+    const { body } = req 
+    try {
+        const updated = await User.update(id, body)
+        if (!updated) {
+            res.status(404).json({
+                message: `User by id ${id} does not exist`
+            })
+        } else {
+            res.json(updated)
+        }
+    } catch (err) {
+        res.status(500).json({ 
+            message: "Couldn't update new user",
             error: err.message
         })
     }
